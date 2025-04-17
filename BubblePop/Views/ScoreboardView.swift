@@ -1,31 +1,29 @@
-//
-//  ScoreboardView.swift
-//  BubblePop
-//
-//  Created by Yohan Ediriweera on 2025-04-02.
-//
+// Views/ScoreboardView.swift
 
 import SwiftUI
 
 struct ScoreboardView: View {
-    let highScores = [
-        ("Alice", 150),
-        ("Bob", 120)
-    ]
+    @Environment(\.dismiss) var dismiss
+    var scores: [String] {
+        UserDefaults.standard.stringArray(forKey: "HighScores")?.sorted(by: { $0 > $1 }) ?? []
+    }
     
     var body: some View {
-        VStack {
-            Text("High Scores")
-                .font(.largeTitle)
+        VStack(spacing: 10) {
+            Text("🎉 Game Over 🎉").font(.largeTitle)
+            Text("🏆 High Scores").font(.title2)
             
-            List(highScores, id: \.0) { entry in
-                HStack {
-                    Text(entry.0)
-                    Spacer()
-                    Text("\(entry.1)")
-                }
+            List(scores.prefix(10), id: \.self) { score in
+                Text(score)
             }
+            
+            Button("Play Again") {
+                dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top)
         }
+        .padding()
     }
 }
 

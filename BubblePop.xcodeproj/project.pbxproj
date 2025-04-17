@@ -10,9 +10,22 @@
 		B543F33D2D9CF68B00EBDBFA /* BubblePop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubblePop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B543F37E2D9D0E6400EBDBFA /* Exceptions for "BubblePop" folder in "BubblePop" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B543F33C2D9CF68B00EBDBFA /* BubblePop */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B543F33F2D9CF68B00EBDBFA /* BubblePop */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B543F37E2D9D0E6400EBDBFA /* Exceptions for "BubblePop" folder in "BubblePop" target */,
+			);
 			path = BubblePop;
 			sourceTree = "<group>";
 		};
@@ -255,6 +268,7 @@
 				DEVELOPMENT_TEAM = Z585356ZJK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BubblePop/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +298,7 @@
 				DEVELOPMENT_TEAM = Z585356ZJK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BubblePop/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

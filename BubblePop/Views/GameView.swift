@@ -1,37 +1,47 @@
-//
-//  GameView.swift
-//  BubblePop
-//
-//  Created by Yohan Ediriweera on 2025-04-02.
-//
+// Views/GameView.swift
 
 import SwiftUI
 
 struct GameView: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject private var viewModel = GameViewModel()
+    let playerName: String
+    
     var body: some View {
-        VStack {
-            HStack {
-                Text("Time: 60s") // Placeholder
-                Spacer()
-                Text("Score: 0") // Placeholder
-            }
-            .padding()
-            
-            ZStack {
-                // Placeholder bubbles
-                ForEach(0..<10, id: \.self) { i in
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 50, height: 50)
-                        .position(x: CGFloat.random(in: 50...300), y: CGFloat.random(in: 100...500))
+        ZStack {
+            VStack {
+                HStack {
+                    Text("Time: \(viewModel.timeLeft)")
+                    Spacer()
+                    Text("Score: \(viewModel.score)")
                 }
+                .padding()
+                
+                ZStack {
+                    ForEach(viewModel.bubbles) { bubble in
+                        BubbleView(bubble: bubble)
+                            .position(x: bubble.x * UIScreen.main.bounds.width,
+                                      y: bubble.y * UIScreen.main.bounds.height)
+                            .onTapGesture {
+                                viewModel.pop(bubble)
+                            }
+                    }
+                }
+                
+                Spacer()
             }
+            .blur(radius: viewModel.isGameOver ? 5 : 0)
             
-            Spacer()
+            if viewModel.isGameOver {
+                ScoreboardView()
+            }
+        }
+        .onAppear {
+            viewModel.startGame(for: playerName)
         }
     }
 }
 
 #Preview {
-    GameView()
+    GameView(playerName: "Test User")
 }

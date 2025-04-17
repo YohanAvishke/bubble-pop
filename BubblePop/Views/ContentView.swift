@@ -1,30 +1,28 @@
-//
-//  ContentView.swift
-//  BubblePop
-//
-//  Created by Yohan Ediriweera on 2025-04-02.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    @State private var playerName: String = ""
+    @State private var playerName = ""
+    @State private var showGame = false
     
     var body: some View {
-        VStack {
-            Text("Welcome to BubblePop")
+        VStack(spacing: 20) {
+            Text("🎈 Bubble Pop Game 🎈")
                 .font(.largeTitle)
+                .padding()
             
             TextField("Enter your name", text: $playerName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
             Button("Start Game") {
-                // Navigation logic later
+                showGame = true
             }
-            .padding()
+            .disabled(playerName.isEmpty)
+            .buttonStyle(.borderedProminent)
         }
-        .padding()
+        .sheet(isPresented: $showGame) {
+            GameView(playerName: playerName)
+        }
     }
 }
 
