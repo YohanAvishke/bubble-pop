@@ -3,6 +3,7 @@ import SwiftUI
 struct GameView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = GameViewModel()
+    @State private var showScoreboard = false
     let playerName: String
     
     var body: some View {
@@ -29,6 +30,7 @@ struct GameView: View {
                     }
                 }
             }
+            
             Spacer()
             
             HStack(spacing: 30) {
@@ -38,7 +40,9 @@ struct GameView: View {
                     Label("Restart", systemImage: "arrow.clockwise")
                 }
                 .buttonStyle(.borderedProminent)
+                
                 Spacer()
+                
                 Button(action: {
                     dismiss()
                 }) {
@@ -47,14 +51,20 @@ struct GameView: View {
                 .buttonStyle(.bordered)
             }
             .padding(.horizontal, 20.0)
+            
         }
-        .blur(radius: viewModel.isGameOver ? 5 : 0)
         .onAppear {
             viewModel.startGame(for: playerName)
         }
-        
-        if viewModel.isGameOver {
-            ScoreboardView()
+        .onChange(of: viewModel.isGameOver) {
+            if viewModel.isGameOver {
+                showScoreboard = true
+            }
+        }
+        .fullScreenCover(isPresented: $showScoreboard) {
+            ScoreboardView(onQuit: {
+                dismiss()
+            })
         }
     }
 }

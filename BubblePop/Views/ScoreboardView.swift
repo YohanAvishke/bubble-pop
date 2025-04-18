@@ -1,9 +1,9 @@
-// Views/ScoreboardView.swift
-
 import SwiftUI
 
 struct ScoreboardView: View {
     @Environment(\.dismiss) var dismiss
+    var onQuit: () -> Void
+    
     var scores: [String] {
         UserDefaults.standard.stringArray(forKey: "HighScores")?.sorted(by: { $0 > $1 }) ?? []
     }
@@ -18,7 +18,7 @@ struct ScoreboardView: View {
             }
             
             Button("Play Again") {
-                dismiss()
+                onQuit()
             }
             .buttonStyle(.borderedProminent)
             .padding(.top)
@@ -28,5 +28,7 @@ struct ScoreboardView: View {
 }
 
 #Preview {
-    ScoreboardView()
+    ScoreboardView(onQuit:{
+        print("Back to Menu tapped (Preview)")
+    })
 }
