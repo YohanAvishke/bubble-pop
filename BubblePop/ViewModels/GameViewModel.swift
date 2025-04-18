@@ -43,10 +43,31 @@ class GameViewModel: ObservableObject {
         var newBubbles: [Bubble] = []
         let count = Int.random(in: 1...maxBubbles)
         
-        for _ in 0..<count {
+        let rows = 8
+        let cols = 5
+        
+        // Generate all possible cell coordinates
+        var availableCells: [(row: Int, col: Int)] = []
+        for r in 0..<rows {
+            for c in 0..<cols {
+                availableCells.append((r, c))
+            }
+        }
+        
+        // Shuffle and pick up to maxBubbles cells
+        availableCells.shuffle()
+        let selectedCells = availableCells.prefix(count)
+        
+        for cell in selectedCells {
+            let cellWidth = 1.0 / CGFloat(cols)
+            let cellHeight = 1.0 / CGFloat(rows)
+            
+            let x = (CGFloat(cell.col) + 0.5) * cellWidth
+            let y = (CGFloat(cell.row) + 0.5) * cellHeight
+            
             let bubble = Bubble(
-                x: CGFloat.random(in: 0.05...0.85),
-                y: CGFloat.random(in: 0.1...0.75),
+                x: x,
+                y: y,
                 color: BubbleColor.randomByProbability()
             )
             newBubbles.append(bubble)
@@ -54,6 +75,7 @@ class GameViewModel: ObservableObject {
         
         bubbles = newBubbles
     }
+
     
     func pop(_ bubble: Bubble) {
         if let index = bubbles.firstIndex(where: { $0.id == bubble.id }) {

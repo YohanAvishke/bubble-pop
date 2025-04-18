@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var playerName = ""
-    @State private var showGame = false
+    @State private var isGamePresented = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -15,11 +15,11 @@ struct ContentView: View {
                 .padding()
             
             Button("Start Game") {
-                showGame = true
+                isGamePresented = true
             }
             .disabled(playerName.isEmpty)
             .buttonStyle(.borderedProminent)
-            .fullScreenCover(isPresented: $showGame) {
+            .fullScreenCover(isPresented: $isGamePresented) {
                 GameView(playerName: playerName)
             }
         }
