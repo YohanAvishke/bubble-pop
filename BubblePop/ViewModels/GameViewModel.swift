@@ -12,6 +12,7 @@ class GameViewModel: ObservableObject {
     var lastPoppedColor: BubbleColor?
     var playerName = ""
     var timer: Timer?
+    var comboCount = 0
     
     func startGame(for name: String) {
         playerName = name
@@ -72,18 +73,27 @@ class GameViewModel: ObservableObject {
         
         bubbles = newBubbles
     }
-
     
     func pop(_ bubble: Bubble) {
         if let index = bubbles.firstIndex(where: { $0.id == bubble.id }) {
             bubbles.remove(at: index)
             
             let basePoints = bubble.color.points
+            
             if lastPoppedColor == bubble.color {
-                score += Int(round(Double(basePoints) * 1.5))
+                comboCount += 1
             } else {
-                score += basePoints
+                comboCount = 0
             }
+            
+            let awardedPoints: Int
+            if comboCount > 0 {
+                awardedPoints = Int(round(Double(basePoints) * 1.5))
+            } else {
+                awardedPoints = basePoints
+            }
+            
+            score += awardedPoints
             lastPoppedColor = bubble.color
         }
     }
