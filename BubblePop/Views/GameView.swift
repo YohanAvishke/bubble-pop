@@ -62,9 +62,9 @@ struct GameView: View {
             }
         }
         .fullScreenCover(isPresented: $showScoreboard) {
-            ScoreboardView(onQuit: {
+            ScoreboardView{
                 dismiss()
-            })
+            }
         }
     }
 }

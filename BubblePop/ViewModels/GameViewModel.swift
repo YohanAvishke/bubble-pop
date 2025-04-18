@@ -5,19 +5,16 @@ import SwiftUI
 class GameViewModel: ObservableObject {
     @Published var bubbles: [Bubble] = []
     @Published var score = 0
-    @Published var timeLeft = 60
+    @Published var timeLeft = GameSettings.shared.timeLimit
     @Published var isGameOver = false
+    @Published var maxBubbles = GameSettings.shared.maxBubbles
     
-    let maxBubbles = 15
     var lastPoppedColor: BubbleColor?
     var playerName = ""
     var timer: Timer?
     
     func startGame(for name: String) {
         playerName = name
-        score = 0
-        timeLeft = 60
-        bubbles = []
         isGameOver = false
         lastPoppedColor = nil
         

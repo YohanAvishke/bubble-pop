@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var playerName = ""
     @State private var isGamePresented = false
+    @State private var isScoreBoardPresented = false
+    @State private var isSettingsPresented = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -21,6 +23,24 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .fullScreenCover(isPresented: $isGamePresented) {
                 GameView(playerName: playerName)
+            }
+            
+            Button("High Scores") {
+                isScoreBoardPresented = true
+            }
+            .buttonStyle(.borderedProminent)
+            .fullScreenCover(isPresented: $isScoreBoardPresented) {
+                ScoreboardView{
+                    isScoreBoardPresented = false
+                }
+            }
+            
+            Button("⚙️ Settings") {
+                isSettingsPresented = true
+            }
+            .buttonStyle(.bordered)
+            .fullScreenCover(isPresented: $isSettingsPresented) {
+                SettingsView()
             }
         }
     }

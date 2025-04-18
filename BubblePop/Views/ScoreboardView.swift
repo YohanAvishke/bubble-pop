@@ -2,10 +2,11 @@ import SwiftUI
 
 struct ScoreboardView: View {
     @Environment(\.dismiss) var dismiss
-    var onQuit: () -> Void
+    
+    var onClose: (() -> Void)? = nil
     
     var scores: [String] {
-        UserDefaults.standard.stringArray(forKey: "HighScores")?.sorted(by: { $0 > $1 }) ?? []
+        UserDefaults.standard.stringArray(forKey: "HighScores")?.sorted(by: { $0 < $1 }) ?? []
     }
     
     var body: some View {
@@ -17,18 +18,20 @@ struct ScoreboardView: View {
                 Text(score)
             }
             
-            Button("Play Again") {
-                onQuit()
+            if let onClose = onClose {
+                Button("Close") {
+                    onClose()
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.top)
             }
-            .buttonStyle(.borderedProminent)
-            .padding(.top)
         }
         .padding()
     }
 }
 
 #Preview {
-    ScoreboardView(onQuit:{
+    ScoreboardView(onClose:{
         print("Back to Menu tapped (Preview)")
     })
 }
