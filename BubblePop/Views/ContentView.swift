@@ -19,9 +19,9 @@ struct ContentView: View {
             }
             .disabled(playerName.isEmpty)
             .buttonStyle(.borderedProminent)
-        }
-        .sheet(isPresented: $showGame) {
-            GameView(playerName: playerName)
+            .fullScreenCover(isPresented: $showGame) {
+                GameView(playerName: playerName)
+            }
         }
     }
 }
