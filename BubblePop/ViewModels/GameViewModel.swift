@@ -1,6 +1,8 @@
 import SwiftUI
 
 class GameViewModel: ObservableObject {
+    @Published var showCountdown = false
+    @Published var countdownText = "3"
     @Published var bubbles: [Bubble] = []
     @Published var score = 0
     @Published var isGameOver = false
@@ -12,13 +14,40 @@ class GameViewModel: ObservableObject {
     var timer: Timer?
     var comboCount = 0
     
-    func startGame(for name: String) {
-        playerName = name
+    func resetGameState() {
+        countdownText = "3"
+        timer?.invalidate()
+        timer = nil
+        bubbles = []
         score = 0
+        timeLeft = GameSettings.shared.timeLimit
         isGameOver = false
         lastPoppedColor = nil
-        timeLeft = GameSettings.shared.timeLimit
+    }
+    
+    func startCountdown(for name: String) {
+        // Prevent countdown if already running
+        if showCountdown { return }
         
+        resetGameState()
+        
+        playerName = name
+        showCountdown = true
+        
+        let sequence = ["3", "2", "1", "Start!"]
+        for (index, value) in sequence.enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
+                self.countdownText = value
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(sequence.count)) {
+            self.showCountdown = false
+            self.startGame(for: name)
+        }
+    }
+    
+    func startGame(for name: String) {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             self.tick()
