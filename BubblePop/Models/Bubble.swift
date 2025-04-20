@@ -1,5 +1,3 @@
-// Models/Bubble.swift
-
 import SwiftUI
 
 enum BubbleColor: CaseIterable {

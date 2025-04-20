@@ -30,7 +30,7 @@ struct ContentView: View {
             }
             .buttonStyle(.borderedProminent)
             .fullScreenCover(isPresented: $isScoreBoardPresented) {
-                ScoreboardView{
+                ScoreboardView {
                     isScoreBoardPresented = false
                 }
             }

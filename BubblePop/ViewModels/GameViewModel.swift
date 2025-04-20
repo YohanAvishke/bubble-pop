@@ -1,13 +1,11 @@
-// ViewModels/GameViewModel.swift
-
 import SwiftUI
 
 class GameViewModel: ObservableObject {
     @Published var bubbles: [Bubble] = []
     @Published var score = 0
-    @Published var timeLeft = GameSettings.shared.timeLimit
     @Published var isGameOver = false
     @Published var maxBubbles = GameSettings.shared.maxBubbles
+    @Published var timeLeft = GameSettings.shared.timeLimit
     
     var lastPoppedColor: BubbleColor?
     var playerName = ""
@@ -16,8 +14,10 @@ class GameViewModel: ObservableObject {
     
     func startGame(for name: String) {
         playerName = name
+        score = 0
         isGameOver = false
         lastPoppedColor = nil
+        timeLeft = GameSettings.shared.timeLimit
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
@@ -38,13 +38,13 @@ class GameViewModel: ObservableObject {
     }
     
     func spawnBubbles() {
+        // All the bubbles are spawned in pre-defined cells to stop overlapping issues
         var newBubbles: [Bubble] = []
         let count = Int.random(in: 1...maxBubbles)
-        
         let rows = 8
         let cols = 5
         
-        // Generate all possible cell coordinates
+        // Define the cells
         var availableCells: [(row: Int, col: Int)] = []
         for r in 0..<rows {
             for c in 0..<cols {
@@ -52,7 +52,6 @@ class GameViewModel: ObservableObject {
             }
         }
         
-        // Shuffle and pick up to maxBubbles cells
         availableCells.shuffle()
         let selectedCells = availableCells.prefix(count)
         
