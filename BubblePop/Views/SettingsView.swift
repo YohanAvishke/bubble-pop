@@ -2,8 +2,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var gameTime = GameSettings.shared.timeLimit
-    @State private var maxBubbles = GameSettings.shared.maxBubbles
+    @State private var gameTime = GameSetting.shared.timeLimit
+    @State private var maxBubbles = GameSetting.shared.maxBubbles
     
     var body: some View {
         NavigationStack {
@@ -24,8 +24,8 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        GameSettings.shared.timeLimit = gameTime
-                        GameSettings.shared.maxBubbles = maxBubbles
+                        GameSetting.shared.timeLimit = gameTime
+                        GameSetting.shared.maxBubbles = maxBubbles
                         dismiss()
                     }
                 }

@@ -6,9 +6,9 @@ class GameViewModel: ObservableObject {
     @Published var bubbles: [Bubble] = []
     @Published var score = 0
     @Published var isGameOver = false
-    @Published var maxBubbles = GameSettings.shared.maxBubbles
-    @Published var timeLeft = GameSettings.shared.timeLimit
-    
+    @Published var maxBubbles = GameSetting.shared.maxBubbles
+    @Published var timeLeft = GameSetting.shared.timeLimit
+    @Published var comboPopups: [ComboPopup] = []
     var lastPoppedColor: BubbleColor?
     var playerName = ""
     var timer: Timer?
@@ -20,7 +20,7 @@ class GameViewModel: ObservableObject {
         timer = nil
         bubbles = []
         score = 0
-        timeLeft = GameSettings.shared.timeLimit
+        timeLeft = GameSetting.shared.timeLimit
         isGameOver = false
         lastPoppedColor = nil
     }
@@ -28,20 +28,17 @@ class GameViewModel: ObservableObject {
     func startCountdown(for name: String) {
         // Prevent countdown if already running
         if showCountdown { return }
-        
         resetGameState()
-        
         playerName = name
         showCountdown = true
-        
         let sequence = ["3", "2", "1", "Start!"]
         for (index, value) in sequence.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
                 self.countdownText = value
             }
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double(sequence.count)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() +
+                                      Double(sequence.count)) {
             self.showCountdown = false
             self.startGame(for: name)
         }
@@ -49,9 +46,11 @@ class GameViewModel: ObservableObject {
     
     func startGame(for name: String) {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            self.tick()
-        }
+        timer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: true) {
+                _ in self.tick()
+            }
         spawnBubbles()
     }
     
@@ -67,69 +66,39 @@ class GameViewModel: ObservableObject {
     }
     
     func spawnBubbles() {
-        // All the bubbles are spawned in pre-defined cells to stop overlapping issues
-        var newBubbles: [Bubble] = []
-        let count = Int.random(in: 1...maxBubbles)
-        let rows = 8
-        let cols = 5
-        
-        // Define the cells
-        var availableCells: [(row: Int, col: Int)] = []
-        for r in 0..<rows {
-            for c in 0..<cols {
-                availableCells.append((r, c))
-            }
-        }
-        
-        availableCells.shuffle()
-        let selectedCells = availableCells.prefix(count)
-        
-        for cell in selectedCells {
-            let cellWidth = 1.0 / CGFloat(cols)
-            let cellHeight = 1.0 / CGFloat(rows)
-            
-            let x = (CGFloat(cell.col) + 0.5) * cellWidth
-            let y = (CGFloat(cell.row) + 0.5) * cellHeight
-            
-            let bubble = Bubble(
-                x: x,
-                y: y,
-                color: BubbleColor.randomByProbability()
-            )
-            newBubbles.append(bubble)
-        }
-        
-        bubbles = newBubbles
+        // all bubbles are spawned in pre-defined cells to stop overlapping
+        bubbles = Bubble.generateBubbles(max: maxBubbles)
     }
     
     func pop(_ bubble: Bubble) {
-        if let index = bubbles.firstIndex(where: { $0.id == bubble.id }) {
-            bubbles.remove(at: index)
-            
-            let basePoints = bubble.color.points
-            
-            if lastPoppedColor == bubble.color {
-                comboCount += 1
-            } else {
-                comboCount = 0
+        // verify and remove the popped bubble
+        guard let index = bubbles
+            .firstIndex(where: { $0.id == bubble.id }) else { return }
+        bubbles.remove(at: index)
+        
+        // scoring and combo calculations
+        let result = ScoringEngine.evaluateCombo(
+            poppedColor: bubble.color,
+            lastColor: lastPoppedColor,
+            currentCombo: comboCount
+        )
+        comboCount = result.newComboCount
+        score += result.awardedPoints
+        lastPoppedColor = bubble.color
+        if result.isCombo {
+            let popup = ComboPopup(
+                text: "Combo x\(comboCount + 1)!",
+                x: bubble.x,
+                y: bubble.y
+            )
+            comboPopups.append(popup)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.comboPopups.removeAll { $0.id == popup.id }
             }
-            
-            let awardedPoints: Int
-            if comboCount > 0 {
-                awardedPoints = Int(round(Double(basePoints) * 1.5))
-            } else {
-                awardedPoints = basePoints
-            }
-            
-            score += awardedPoints
-            lastPoppedColor = bubble.color
         }
     }
     
     func saveHighScore() {
-        let entry = "\(playerName): \(score)"
-        var existing = UserDefaults.standard.stringArray(forKey: "HighScores") ?? []
-        existing.append(entry)
-        UserDefaults.standard.set(existing, forKey: "HighScores")
+        HighScoreManager.save(score: score, for: playerName)
     }
 }

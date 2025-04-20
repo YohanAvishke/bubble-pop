@@ -3,17 +3,12 @@ import SwiftUI
 struct ScoreboardView: View {
     var onClose: (() -> Void)? = nil
     
-    var scores: [String] {
-        UserDefaults.standard.stringArray(forKey: "HighScores")?.sorted(by: { $0 > $1 }) ?? []
-    }
-    
     var body: some View {
         VStack(spacing: 10) {
-            Text("🎉 Game Over 🎉").font(.largeTitle)
-            Text("🏆 High Scores").font(.title2)
+            Text("🏆 High Scores").font(.largeTitle)
             
-            List(scores.prefix(10), id: \.self) { score in
-                Text(score)
+            List(HighScoreManager.fetchSorted().prefix(10), id: \.self) {
+                score in Text(score)
             }
             
             if let onClose = onClose {

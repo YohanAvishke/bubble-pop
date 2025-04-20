@@ -40,4 +40,28 @@ struct Bubble: Identifiable {
     var x: CGFloat
     var y: CGFloat
     var color: BubbleColor
+    
+    static func generateBubbles(
+        max: Int, rows: Int = 8, cols: Int = 5) -> [Bubble] {
+        var newBubbles: [Bubble] = []
+        let count = Int.random(in: 1...max)
+        var availableCells: [(row: Int, col: Int)] =
+            (0..<rows).flatMap { r in (0..<cols).map { c in (r, c) } }
+        availableCells.shuffle()
+        
+        for cell in availableCells.prefix(count) {
+            let cellWidth = 1.0 / CGFloat(cols)
+            let cellHeight = 1.0 / CGFloat(rows)
+            let x = (CGFloat(cell.col) + 0.5) * cellWidth
+            let y = (CGFloat(cell.row) + 0.5) * cellHeight
+            let bubble = Bubble(
+                x: x,
+                y: y,
+                color: BubbleColor.randomByProbability()
+            )
+            newBubbles.append(bubble)
+        }
+        
+        return newBubbles
+    }
 }

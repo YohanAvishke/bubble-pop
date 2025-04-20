@@ -1,18 +1,21 @@
 import Foundation
 
-struct GameSettings {
-    static var shared = GameSettings()
-    
+struct GameSetting {
+    static var shared = GameSetting()
     private let timerKey = "GameTimeLimit"
     private let bubblesKey = "MaxBubbles"
-    
     var timeLimit: Int {
-        get { UserDefaults.standard.integer(forKey: timerKey).nonZeroDefault(60) }
-        set { UserDefaults.standard.set(newValue, forKey: timerKey) }
+        get {
+            UserDefaults.standard.integer(forKey: timerKey).nonZeroDefault(60)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: timerKey)
+        }
     }
-    
     var maxBubbles: Int {
-        get { UserDefaults.standard.integer(forKey: bubblesKey).nonZeroDefault(15) }
+        get {
+            UserDefaults.standard.integer(forKey: bubblesKey).nonZeroDefault(15)
+        }
         set { UserDefaults.standard.set(newValue, forKey: bubblesKey) }
     }
 }

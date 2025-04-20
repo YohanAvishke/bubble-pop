@@ -19,6 +19,7 @@ struct GameView: View {
                     .shadow(radius: 10)
                     .transition(.scale)
             }
+            
             // UI for the game
             VStack {
                 // Top inforamtion bar
@@ -31,16 +32,29 @@ struct GameView: View {
                 
                 // Game
                 ZStack {
-                    GeometryReader { geo in // Make sure bubbles doesn't overflow
+                    // Make sure bubbles doesn't overflow
+                    GeometryReader { geo in
                         let width = geo.size.width
                         let height = geo.size.height
                         
                         ForEach(viewModel.bubbles) { bubble in
                             BubbleView(bubble: bubble)
-                                .position(x: bubble.x * width, y: bubble.y * height)
+                                .position(x: bubble.x * width,
+                                          y: bubble.y * height)
                                 .onTapGesture {
                                     viewModel.pop(bubble)
                                 }
+                        }
+                        ForEach(viewModel.comboPopups) { popup in
+                            Text(popup.text)
+                                .font(.body)
+                                .fontWeight(.bold)
+                                .foregroundColor(.red)
+                                .transition(.scale.combined(with: .opacity))
+                                .position(
+                                    x: popup.x * geo.size.width,
+                                    y: popup.y * geo.size.height
+                                )
                         }
                     }
                 }
@@ -77,8 +91,7 @@ struct GameView: View {
             }
             .fullScreenCover(isPresented: $showScoreboard) {
                 ScoreboardView{
-                    // Closing the GameView when user presses close on ScoreboardView.
-                    // So the whole stack closes
+                    // Close the GameView when user closes ScoreboardView.
                     dismiss()
                 }
             }
