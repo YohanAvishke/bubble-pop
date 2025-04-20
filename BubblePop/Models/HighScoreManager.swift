@@ -12,8 +12,16 @@ struct HighScoreManager {
     }
     
     static func fetchAllSortedbyHighest() -> [String] {
-        return UserDefaults.standard.stringArray(forKey: key)?
-            .sorted(by: { $0 > $1 }) ?? []
+        return scores.sorted {
+            (
+                Int($0.split(separator: ":").last?
+                    .trimmingCharacters(in: .whitespaces) ?? "") ?? 0
+            ) >
+            (
+                Int($1.split(separator: ":").last?
+                    .trimmingCharacters(in: .whitespaces) ?? "") ?? 0
+            )
+        }
     }
     
     static func fetchHighestScore() -> Int {
