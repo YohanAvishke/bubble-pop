@@ -7,7 +7,8 @@ struct ScoreboardView: View {
         VStack(spacing: 10) {
             Text("🏆 High Scores").font(.largeTitle)
             
-            List(HighScoreManager.fetchSorted().prefix(10), id: \.self) {
+            List(HighScoreManager.fetchAllSortedbyHighest().prefix(10),
+                 id: \.self) {
                 score in Text(score)
             }
             

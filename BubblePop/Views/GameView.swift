@@ -26,6 +26,8 @@ struct GameView: View {
                 HStack {
                     Text("Time: \(viewModel.timeLeft)")
                     Spacer()
+                    Text("High Score: \(HighScoreManager.fetchHighestScore())")
+                    Spacer()
                     Text("Score: \(viewModel.score)")
                 }
                 .padding()
