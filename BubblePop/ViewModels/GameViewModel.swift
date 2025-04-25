@@ -67,35 +67,46 @@ class GameViewModel: ObservableObject {
     }
     
     func spawnBubbles() {
-        // all bubbles are spawned in pre-defined cells to stop overlapping
-        bubbles = Bubble.generateBubbles(max: maxBubbles)
+        // Keep only the bubbles that are currently popping (flying out)
+        bubbles = bubbles.filter { $0.isPopping }
+        
+        // Then append the new fresh bubbles
+        let newBubbles = Bubble.generateBubbles(max: maxBubbles)
+        bubbles.append(contentsOf: newBubbles)
     }
     
     func pop(_ bubble: Bubble) {
-        // verify and remove the popped bubble
-        guard let index = bubbles
-            .firstIndex(where: { $0.id == bubble.id }) else { return }
-        bubbles.remove(at: index)
+        guard let index = bubbles.firstIndex(where: { $0.id == bubble.id }) else { return }
         
-        // scoring and combo calculations
+        // Immediately update score and combo
+        let poppedBubble = bubbles[index]
         let result = ScoringEngine.evaluateCombo(
-            poppedColor: bubble.color,
+            poppedColor: poppedBubble.color,
             lastColor: lastPoppedColor,
             currentCombo: comboCount
         )
         comboCount = result.newComboCount
         score += result.awardedPoints
-        lastPoppedColor = bubble.color
+        lastPoppedColor = poppedBubble.color
+        
         if result.isCombo {
             let popup = ComboPopup(
                 text: "Combo x\(comboCount + 1)!",
-                x: bubble.x,
-                y: bubble.y
+                x: poppedBubble.x,
+                y: poppedBubble.y
             )
             comboPopups.append(popup)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.comboPopups.removeAll { $0.id == popup.id }
             }
+        }
+        
+        // Instead of removing immediately, mark it as popping
+        bubbles[index].isPopping = true
+        
+        // Remove after animation delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.bubbles.removeAll { $0.id == poppedBubble.id }
         }
     }
     

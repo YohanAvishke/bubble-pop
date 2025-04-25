@@ -41,7 +41,8 @@ struct GameView: View {
                         
                         ForEach(viewModel.bubbles) { bubble in
                             BubbleView(gameViewModel: self.viewModel,
-                                       bubble: bubble)
+                                       bubble: bubble,
+                                       screenHeight: height)
                             .position(x: bubble.x * width,
                                       y: bubble.y * height)
                         }

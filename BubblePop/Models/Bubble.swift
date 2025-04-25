@@ -40,6 +40,7 @@ struct Bubble: Identifiable {
     var x: CGFloat
     var y: CGFloat
     var color: BubbleColor
+    var isPopping = false
     
     static func generateBubbles(
         max: Int, rows: Int = 8, cols: Int = 5) -> [Bubble] {
