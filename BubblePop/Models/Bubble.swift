@@ -23,9 +23,12 @@ enum BubbleColor: CaseIterable {
         }
     }
     
+    /// Used to randomise the bubble types.
+    /// Red 40%, Pink 30%, Green 15%, Blue 10%, Black 5% chance of appearing
+    /// - Returns: colour of the bubble type
     static func randomByProbability() -> BubbleColor {
-        let rand = Double.random(in: 0...1)
-        switch rand {
+        let probability = Double.random(in: 0...1)
+        switch probability {
             case 0..<0.4: return .red
             case 0.4..<0.7: return .pink
             case 0.7..<0.85: return .green
@@ -40,21 +43,35 @@ struct Bubble: Identifiable {
     var x: CGFloat
     var y: CGFloat
     var color: BubbleColor
-    var isPopping = false
+    var isPopping = false // flag to track a popped bubble from a non-popped one
     
-    static func generateBubbles(
-        max: Int, rows: Int = 8, cols: Int = 5) -> [Bubble] {
+    
+    /// Bubbble geenration logic
+    /// - Parameters:
+    ///   - maxBubbles: maximum number of genratable bubbles
+    ///   - rowCount: screen in divided to 8 rows
+    ///   - columnCount: screen in divided to 5 columns
+    /// - Returns: generated bubbles
+    static func generateBubbles(maxBubbles: Int,
+                                rowCount: Int = 8,
+                                columnCount: Int = 5) -> [Bubble] {
         var newBubbles: [Bubble] = []
-        let count = Int.random(in: 1...max)
-        var availableCells: [(row: Int, col: Int)] =
-            (0..<rows).flatMap { r in (0..<cols).map { c in (r, c) } }
+        let bubbleCount = Int.random(in: 1...maxBubbles)
+        // Bubbles are randomly generated in pre-defined columns and rows.
+        // Which helps to stop bubble overlapping
+        var availableCells: [(row: Int, column: Int)] = (0..<rowCount).flatMap {
+            r in (0..<columnCount).map { c in (r, c) }
+        }
+        // Each time generated bubbles should be in different positions
         availableCells.shuffle()
         
-        for cell in availableCells.prefix(count) {
-            let cellWidth = 1.0 / CGFloat(cols)
-            let cellHeight = 1.0 / CGFloat(rows)
-            let x = (CGFloat(cell.col) + 0.5) * cellWidth
+        for cell in availableCells.prefix(bubbleCount) {
+            // Use the cells to determine each bubble's position
+            let cellWidth = 1.0 / CGFloat(columnCount)
+            let cellHeight = 1.0 / CGFloat(rowCount)
+            let x = (CGFloat(cell.column) + 0.5) * cellWidth
             let y = (CGFloat(cell.row) + 0.5) * cellHeight
+            
             let bubble = Bubble(
                 x: x,
                 y: y,

@@ -71,7 +71,7 @@ class GameViewModel: ObservableObject {
         bubbles = bubbles.filter { $0.isPopping }
         
         // Then append the new fresh bubbles
-        let newBubbles = Bubble.generateBubbles(max: maxBubbles)
+        let newBubbles = Bubble.generateBubbles(maxBubbles: maxBubbles)
         bubbles.append(contentsOf: newBubbles)
     }
     

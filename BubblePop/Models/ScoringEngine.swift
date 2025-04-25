@@ -7,16 +7,23 @@ struct ScoringResult {
 }
 
 struct ScoringEngine {
-    static func evaluateCombo(
-        poppedColor: BubbleColor,
-        lastColor: BubbleColor?,
-        currentCombo: Int
-    ) -> ScoringResult {
+    
+    /// Calculate combos
+    /// - Parameters:
+    ///   - poppedColor: what colour is popped
+    ///   - lastColor: reference to colour before (for combos)
+    ///   - currentComboCount: players current combo status
+    /// - Returns: ScoringResult
+    static func evaluateCombo(poppedColor: BubbleColor,
+                              lastColor: BubbleColor?,
+                              currentComboCount: Int) -> ScoringResult {
         let isCombo = lastColor == poppedColor
-        let comboCount = isCombo ? currentCombo + 1 : 0
+        // if it's not a new combo, reset existing
+        let comboCount = isCombo ? currentComboCount + 1 : 0
         let basePoints = poppedColor.points
-        let points = comboCount > 0 ? Int(round(
-            Double(basePoints) * 1.5)) : basePoints
+        // keeping an combo multiply points by 1.5x
+        let points = comboCount > 0 ? Int(
+            round(Double(basePoints) * 1.5)) : basePoints
         
         return ScoringResult(
             awardedPoints: points,
