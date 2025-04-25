@@ -1,5 +1,3 @@
-// Views/BubbleView.swift
-
 import SwiftUI
 
 struct BubbleView: View {

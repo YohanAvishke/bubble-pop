@@ -54,8 +54,8 @@ struct GameView: View {
                                 .foregroundColor(.red)
                                 .transition(.scale.combined(with: .opacity))
                                 .position(
-                                    x: popup.x * geo.size.width,
-                                    y: popup.y * geo.size.height
+                                    x: popup.x * width,
+                                    y: popup.y * height
                                 )
                         }
                     }

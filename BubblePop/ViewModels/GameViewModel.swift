@@ -9,6 +9,7 @@ class GameViewModel: ObservableObject {
     @Published var maxBubbles = GameSetting.shared.maxBubbles
     @Published var timeLeft = GameSetting.shared.timeLimit
     @Published var comboPopups: [ComboPopup] = []
+    
     var lastPoppedColor: BubbleColor?
     var playerName = ""
     var timer: Timer?
