@@ -40,12 +40,10 @@ struct GameView: View {
                         let height = geo.size.height
                         
                         ForEach(viewModel.bubbles) { bubble in
-                            BubbleView(bubble: bubble)
-                                .position(x: bubble.x * width,
-                                          y: bubble.y * height)
-                                .onTapGesture {
-                                    viewModel.pop(bubble)
-                                }
+                            BubbleView(gameViewModel: self.viewModel,
+                                       bubble: bubble)
+                            .position(x: bubble.x * width,
+                                      y: bubble.y * height)
                         }
                         ForEach(viewModel.comboPopups) { popup in
                             Text(popup.text)
