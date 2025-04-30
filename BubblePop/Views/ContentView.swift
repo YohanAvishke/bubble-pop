@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var playerName = ""
+    // Flags control the presentation of each screen
     @State private var isGamePresented = false
     @State private var isScoreBoardPresented = false
     @State private var isSettingsPresented = false
@@ -31,6 +32,7 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .fullScreenCover(isPresented: $isScoreBoardPresented) {
                 ScoreboardView {
+                    // Allows dismissing the screen
                     isScoreBoardPresented = false
                 }
             }

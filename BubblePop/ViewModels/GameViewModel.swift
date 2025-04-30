@@ -83,7 +83,7 @@ class GameViewModel: ObservableObject {
         let result = ScoringEngine.evaluateCombo(
             poppedColor: poppedBubble.color,
             lastColor: lastPoppedColor,
-            currentCombo: comboCount
+            currentComboCount: comboCount
         )
         comboCount = result.newComboCount
         score += result.awardedPoints

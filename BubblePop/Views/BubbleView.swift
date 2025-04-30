@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct BubbleView: View {
+    // Reference coming from the GameView
     @ObservedObject var gameViewModel: GameViewModel
+    // Controls pop animation
     @State private var isAnimatingPop = false
+    // Offsets for movements when a bubble pops
     @State private var yOffset: CGFloat = 0
     @State private var xOffset: CGFloat = 0
     
@@ -22,6 +25,7 @@ struct BubbleView: View {
                     gameViewModel.pop(bubble)
                 }
             }
+            // When the bubble starts popping, animate it flying off screen
             .onChange(of: bubble.isPopping) {
                 if bubble.isPopping {
                     let randomXDirection: CGFloat = Bool.random() ? -1 : 1
@@ -30,6 +34,6 @@ struct BubbleView: View {
                     isAnimatingPop = true
                 }
             }
-            .allowsHitTesting(!bubble.isPopping)
+            .allowsHitTesting(!bubble.isPopping) // disable popped bubbles
     }
 }
